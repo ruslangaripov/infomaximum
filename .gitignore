@@ -1,0 +1,4 @@
+*.sw?
+*.user
+.vs
+build
