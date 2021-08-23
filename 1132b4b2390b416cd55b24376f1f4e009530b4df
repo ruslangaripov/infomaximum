@@ -1,0 +1,5 @@
+Actually, this is not a pure C++ solution -- the code currently contains
+calls to the GetCurrentThreadId() function from Windows SDK.  I use it
+to show thread identifiers in debug output.  Because I use C-rooted
+printf() to output information, I cannot switch to std::thread::id
+class.  Therefore, calls to the GetCurrentThreadId() remain.
