@@ -10,7 +10,12 @@ WrkThrd(std::size_t id, Data *data)
   Request *req;
   const unsigned long int thrd_id = GetCurrentThreadId();
 
+  {
+    std::unique_lock<std::mutex> lck(data->mtx);
+    ++data->wrk_thrds_run;
+  }
   std::printf("[%ld] Worker thread #%zu started.\n", thrd_id, id);
+  data->wrk_thrds_are_ready.notify_one();
   while (true)
   {
     {

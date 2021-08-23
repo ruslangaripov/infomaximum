@@ -22,12 +22,23 @@ MainThrd(int wrk_thrd_nmbr)
   Request *req;
 
   std::printf("[%ld] Main thread started.\n%d worker thread(s) will be "
-      "created.\n", thrd_id, wrk_thrd_nmbr);
+      "created.  Waiting while worker threads are being created.\n", thrd_id,
+      wrk_thrd_nmbr);
+  data.wrk_thrds_run = 0;
   data.kill = false;
   for (i = 0; wrk_thrds.size() > i; ++i)
   {
     wrk_thrds.at(i) = std::move(std::thread(WrkThrd, i, &data));
   }
+  {
+    std::unique_lock<std::mutex> lck(data.mtx);
+    data.wrk_thrds_are_ready.wait(lck,
+        [wrk_thrd_nmbr, &data = std::as_const(data)](void) -> bool
+        {
+          return wrk_thrd_nmbr == data.wrk_thrds_run;
+        });
+  }
+  std::printf("Worker threads were created.  Extract requests.\n");
   while (nullptr != (req = GetRequest()))
   {
     {

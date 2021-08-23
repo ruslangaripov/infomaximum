@@ -10,7 +10,9 @@ struct Data
 {
   std::mutex mtx;
   std::condition_variable reqs_is_ne;
+  std::condition_variable wrk_thrds_are_ready;
   std::deque<Request *> reqs;
+  int wrk_thrds_run;
   bool kill;
 };
 
