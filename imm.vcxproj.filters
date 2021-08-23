@@ -14,4 +14,32 @@
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cxx">
+      <Filter>cxx</Filter>
+    </ClCompile>
+    <ClCompile Include="if.cxx">
+      <Filter>cxx</Filter>
+    </ClCompile>
+    <ClCompile Include="main_thrd.cxx">
+      <Filter>cxx</Filter>
+    </ClCompile>
+    <ClCompile Include="wrk_thrd.cxx">
+      <Filter>cxx</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="if.hxx">
+      <Filter>hxx</Filter>
+    </ClInclude>
+    <ClInclude Include="main_thrd.hxx">
+      <Filter>hxx</Filter>
+    </ClInclude>
+    <ClInclude Include="wrk_thrd.hxx">
+      <Filter>hxx</Filter>
+    </ClInclude>
+    <ClInclude Include="data.hxx">
+      <Filter>hxx</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

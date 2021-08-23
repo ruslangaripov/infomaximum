@@ -146,8 +146,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="if.cxx" />
+    <ClCompile Include="main.cxx" />
+    <ClCompile Include="main_thrd.cxx" />
+    <ClCompile Include="wrk_thrd.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="data.hxx" />
+    <ClInclude Include="if.hxx" />
+    <ClInclude Include="main_thrd.hxx" />
+    <ClInclude Include="wrk_thrd.hxx" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
