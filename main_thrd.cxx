@@ -34,12 +34,12 @@ MainThrd(int wrk_thrd_nmbr)
       std::unique_lock<std::mutex> lck(data.mtx);
       data.reqs.push_back(req);
     }
-    data.cv.notify_one();
+    data.reqs_is_ne.notify_one();
   }
   /* Intel SDM 3A, 8.1.1 Guaranteed atomic operations: reading or writing byte
    * is always carried out atomically. */
   data.kill = true;
-  data.cv.notify_all();
+  data.reqs_is_ne.notify_all();
   for (thrd_it = wrk_thrds.begin(); wrk_thrds.end() != thrd_it; ++thrd_it)
   {
     thrd_it->join();

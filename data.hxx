@@ -9,7 +9,7 @@
 struct Data
 {
   std::mutex mtx;
-  std::condition_variable cv;
+  std::condition_variable reqs_is_ne;
   std::deque<Request *> reqs;
   bool kill;
 };

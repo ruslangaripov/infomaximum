@@ -17,7 +17,7 @@ WrkThrd(std::size_t id, Data *data)
       std::unique_lock<std::mutex> lck(data->mtx);
       while (!data->kill && data->reqs.empty())
       {
-        data->cv.wait(lck);
+        data->reqs_is_ne.wait(lck);
       }
       if (data->kill)
       {
