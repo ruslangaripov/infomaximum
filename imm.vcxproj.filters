@@ -16,6 +16,9 @@
     <Filter Include="hxx\sync">
       <UniqueIdentifier>{ba1ab7da-d825-4a20-ba0b-c5d87e85bd16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hxx\tp">
+      <UniqueIdentifier>{eab6d2eb-d5d5-4c00-810a-95ac8db433e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sync\srw_lock.hxx">
@@ -29,6 +32,18 @@
     </ClInclude>
     <ClInclude Include="unique_handle.hxx">
       <Filter>hxx</Filter>
+    </ClInclude>
+    <ClInclude Include="tp\tp.hxx">
+      <Filter>hxx\tp</Filter>
+    </ClInclude>
+    <ClInclude Include="tp\tp_cln_grp.hxx">
+      <Filter>hxx\tp</Filter>
+    </ClInclude>
+    <ClInclude Include="tp\tp_env.hxx">
+      <Filter>hxx\tp</Filter>
+    </ClInclude>
+    <ClInclude Include="tp\tp_wrk.hxx">
+      <Filter>hxx\tp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
