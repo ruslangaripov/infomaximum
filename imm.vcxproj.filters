@@ -27,5 +27,8 @@
     <ClInclude Include="sync\cond_var.hxx">
       <Filter>hxx\sync</Filter>
     </ClInclude>
+    <ClInclude Include="unique_handle.hxx">
+      <Filter>hxx</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

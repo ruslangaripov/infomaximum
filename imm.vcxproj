@@ -150,6 +150,7 @@
     <ClInclude Include="sync\cond_var.hxx" />
     <ClInclude Include="sync\srw_lock.hxx" />
     <ClInclude Include="sync\srw_lock_guard.hxx" />
+    <ClInclude Include="unique_handle.hxx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
