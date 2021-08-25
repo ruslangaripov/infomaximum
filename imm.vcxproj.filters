@@ -24,5 +24,8 @@
     <ClInclude Include="sync\srw_lock_guard.hxx">
       <Filter>hxx\sync</Filter>
     </ClInclude>
+    <ClInclude Include="sync\cond_var.hxx">
+      <Filter>hxx\sync</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
