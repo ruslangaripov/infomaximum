@@ -13,5 +13,16 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="hxx\sync">
+      <UniqueIdentifier>{ba1ab7da-d825-4a20-ba0b-c5d87e85bd16}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sync\srw_lock.hxx">
+      <Filter>hxx\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="sync\srw_lock_guard.hxx">
+      <Filter>hxx\sync</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
