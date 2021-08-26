@@ -1,6 +1,7 @@
 #ifndef MAIN_THRD_HXX_
 #define MAIN_THRD_HXX_
 
+#include <windows.h>
 #include "data.hxx"
 #include "tp/tp_wrk.hxx"
 
