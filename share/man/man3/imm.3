@@ -1,0 +1,268 @@
+.Dd August 26, 2021
+.Dt IMM 3
+.Sh NAME
+.Nm imm
+.Nd implementation details of the test case solution
+.Sh DESCRIPTION
+In general it's a bad idea to make one single man page for several topics.
+In general one should use
+.Sx RETURN VALUES
+section to describe result of function calls.
+But this is not a
+.Dq real
+man page.
+This is just a part of solution for a test case.
+.Ss sync/cond_var.hxx
+Defines the
+.Vt CondVar
+type which wraps Microsoft Windows native implementation of condition variable
+primitive:
+.Lk https://docs.microsoft.com/en-us/windows/win32/sync/condition-variables "Condition variables".
+This is neither a copyable, nor moveable type.
+.Pp
+The
+.Fn Get
+function returns pointer to the underlying
+.Vt CONDITION_VARIABLE
+structure.
+This is an opaque structure, and one should use it only with condition variable
+functions provided by Microsoft Windows SDK.
+.Pp
+The
+.Fn Wait
+function is just a simple wrapper over the
+.Fn SleepConditionVariableSRW ,
+and its only purpose \(em mimics the
+.Fn std::condition_variable::wait
+function (in the
+.Em name
+only \(em
+.Fn Wait
+has another parameter set, of course).
+The function waits on
+.Va this
+condition variable and releases the specified
+.Fa srw_lock
+as an atomic operation.
+The lock must be held in the manner specified by the
+.Fa flags.
+When the latter is
+.Dv CONDITION_VARIABLE_LOCKMODE_SHARED, the
+.Fa srw_lock
+must be acquired in the shared mode.
+Otherwise \(em in the exclusive mode.
+The
+.Fa timeout
+specifies time-out interval, in milliseconds.
+.Fn Wait
+returns if the interval elapses.
+When the
+.Fa timeout
+is zero, this function tests the state of this condition variable and returns
+immediately.
+If
+.Fa timeout
+is
+.Dv INFINITE
+this function's time-out interval never elapses.
+On success this function returns a non-zero value.
+.Pp
+Just like the
+.Fn Wait
+mimics
+.Fn std::condition_variable::wait ,
+the
+.Fn NotifyOne
+and
+.Fn NotifyAll
+mimic the
+.Fn std::condition_variable::notify_one
+and
+.Fn std::condition_variable::notify_all ,
+respectively.
+They wakes a single thread or all threads waiting on
+.Va this
+condition variable.
+.Ss sync/srw_lock_guard.hxx
+Defines the
+.Vt SrwLockGuardExclusive
+and
+.Vt SrwLockGuardShared
+types.
+These classes are similar to the
+.Vt std::lock_guard ,
+but they work with the
+.Vt SrwLock
+type defined in
+.Pa sync/srw_lock.hxx .
+.Ss sync/srw_lock.hxx
+Defines the
+.Vt SrwLock
+type which wraps some operations on
+.Lk https://docs.microsoft.com/en-us/windows/win32/sync/slim-reader-writer--srw--locks "Slim reader/writer (SRW) locks" .
+This is neither a copyable, nor moveable type.
+.Pp
+Just like the
+.Fn CondVar::Get ,
+the
+.Fn SrwLock::Get
+returns a logically opaque type.
+.Ss unique_handle.hxx
+This is a wrapper class which applies RAII-technique to Microsoft Windows handle
+.Dq type .
+This is a template class, and its
+.Vt Traits
+temlate parameter must define
+.Fn Close
+and
+.Fn Invalid
+members that closes and defines non-valid handle, respectively.
+Because usually Microsoft Windows handles points to non-copyable objects
+.Vt UniqueHandle
+type disables copy constructor and assignment operator.
+.Pp
+.Pa unique_handle.hxx
+also defines
+.Vt UniqueHandleTraits
+class, which may be used as
+.Vt UniqueHandle Ns 's
+traits for the most common case \(em when invalid handle value is
+.Dv NULL
+pointer.
+.Pp
+In this test case we use the
+.Vt UniqueHandle
+to manage thread pool's objects.
+.Ss tp/tp_cln_grp.hxx
+Manages thread pool cleanup group used to release thread pool callback objects.
+.Ss tp/tp_env.hxx
+Manages thread pool callback environment.
+.Pp
+The
+.Vt TpEnv
+owns the
+.Vt TP_CALLBACK_ENVIRON
+structure and, therefore, it's not a
+.Dq real
+handle to an object.
+But the class still derives from the
+.Vt UniqueHandle
+to be
+.Dq consistent
+on usage type.
+.Ss tp/tp.hxx
+Manages thread pool itself.
+.Ss tp/tp_wrk.hxx
+In contrast with the
+.Vt TpEnv ,
+.Vt TpWrk
+is not derived from the
+.Vt UniqueHandle ,
+while
+.Vt TpWrk
+is a
+.Dq handle .
+But because we use thread pool cleanup group to release works/callbacks, we do
+not need stuff of the
+.Vt UniqueHandle .
+The
+.Vt TpWrk
+creates thread pool work, owns by pointer to the
+.Vt TP_WORK
+structure, but it never release the work object.
+The cleanup group does.
+.Ss data.hxx
+Defines the
+.Vt Data
+structure.
+Instance of this type is used to transfer data to/from a thread.
+.Pp
+.Vt Data::mtx
+is SRW lock used with all condition variables.
+.Pp
+A (consumer) thread waits on the
+.Vt Data::reqs_is_ne
+condition variable to check if a new request available in the query.
+A (producer) thread wakes waiting thread(s) after it has added new request to
+the queue.
+\(oq\(oqreqs_is_ne\(cq\(cq stands for
+.Dq Request queue is not empty .
+.Pp
+The
+.Dq main thread
+waits on the
+.Vt Data::wrk_thrds_are_ready
+condition variable until all the worker threads are ready to process requests.
+After that the
+.Dq main thread
+starts to add new requests into the queue.
+.Pp
+After the
+.Dq main thread
+has finished generation of request it stop all the worker threads.
+Immediately.
+It set the
+.Vt Data::kill
+event to the signaled state and waits on the
+.Vt Data::wrk_thrds_killed
+condition variable, until all worker threads exit.
+.Pp
+Both the
+.Vt Data::wrk_thrds_are_ready
+and
+.Vt Data::wrk_thrds_killed
+condition variables manages the
+.Vt Data::wrk_thrds_run
+field \(em number of worker threads currently run.
+.Pp
+The
+.Vt Data::reqs
+is the request queue used by the main and worker threads.
+.Pp
+The
+.Vt Data::tp_env
+is thread pool environment used by the
+.Dq main thread
+to run worker thread callbacks.
+It is the same environment used for the
+.Dq main thread
+itself.
+.Pp
+After the
+.Dq main thread
+finished its work (produced all requests, stopped all worker threads and
+released all unprocessed requests) it sets the
+.Vt Data::end_program
+event to the signaled state.
+The main thread (program execution main thread, not the logical
+.Dq main thread )
+waits on that event, and terminate the program once the event was set.
+.Ss if.cxx
+.Ss if.hxx
+Define input data for the task.
+.Ss main_thrd.cxx
+.Ss main_thrd.hxx
+.Ss wrk_thrd.cxx
+.Ss wrk_thrd.hxx
+Define thread pool works for the
+.Dq main
+and worker threads.
+Types
+.Vt MainThrd
+and
+.Vt WrkThrd
+are similar, and it's possible to create a common base type for those classes.
+For example, move
+.Fn Create ,
+.Fn SetThrdData ,
+.Fn Callback
+and
+.Va m_data
+to the new base class still derived from the
+.Vt TpWrk .
+.Fn "<new base type>::Callback"
+would call a virtual function overrided in both
+.Vt MainThrd
+and
+.Vt WrkThrd .
+But that will complicate the code which is just an academic task.

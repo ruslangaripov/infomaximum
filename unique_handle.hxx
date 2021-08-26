@@ -3,9 +3,6 @@
 
 #include <utility>
 
-/* Wraps Microsoft Windows handle to an object in RAII-way.
- * Template parameter `Traits` must define Close() and Invalid() members that
- * close and define non-valid handle, respectively. */
 template<typename Traits>
 class UniqueHandle
 {
@@ -13,8 +10,6 @@ public:
   typedef Traits TraitsType;
   typedef decltype(TraitsType::Invalid()) HandleType;
 
-  /* Usually objects pointed to by Microsoft Windows handles are not allow
-   * copying.  Disable it in this wrapper. */
   UniqueHandle(const UniqueHandle &) = delete;
 
   UniqueHandle(void) noexcept(true)
@@ -112,8 +107,6 @@ private:
   HandleType m_handle;
 };
 
-/* Defines a convenient base class that implements the most common case -- when
- * nullptr/NULL is value of non-valid handle. */
 template<typename T>
 class UniqueHandleTraits
 {
