@@ -11,13 +11,10 @@ public:
     InitializeSRWLock(&m_lock);
   }
   SrwLock(const SrwLock &) = delete;
+  SrwLock(SrwLock &&) = delete;
   SrwLock& operator =(const SrwLock &) = delete;
+  SrwLock& operator =(SrwLock &&) = delete;
 
-  /* Gets raw pointer to the underlying slim reader/writer lock object. Remember
-   * that:
-   * > An SRW lock cannot be moved or copied. The process must not modify the
-   * object, and must instead treat it as logically opaque. Only use the SRW
-   * functions to manage SRW locks. */
   const SRWLOCK *
   Get(void) const noexcept(true)
   {
