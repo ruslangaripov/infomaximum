@@ -1,0 +1,2 @@
+*.vcxproj -whitespace
+*.vcxproj.filters -whitespace
