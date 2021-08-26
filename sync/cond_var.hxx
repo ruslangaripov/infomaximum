@@ -43,6 +43,12 @@ public:
   {
     WakeConditionVariable(&m_cond_var);
   }
+  /* Wakes all threads waiting on this condition variable. */
+  void
+  NotifyAll(void)
+  {
+    WakeAllConditionVariable(&m_cond_var);
+  }
 
 private:
   CONDITION_VARIABLE m_cond_var;
