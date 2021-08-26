@@ -24,8 +24,8 @@ MainThrd(int wrk_thrd_nmbr)
   std::printf("[%ld] Main thread started.\n%d worker thread(s) will be "
       "created.  Waiting while worker threads are being created.\n", thrd_id,
       wrk_thrd_nmbr);
-  data.wrk_thrds_run = 0;
   data.kill = false;
+  data.wrk_thrds_run = 0;
   for (i = 0; wrk_thrds.size() > i; ++i)
   {
     wrk_thrds.at(i) = std::move(std::thread(WrkThrd, i, &data));
