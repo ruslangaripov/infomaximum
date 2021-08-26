@@ -32,9 +32,11 @@ public:
   {
   }
 
-  UniqueHandle &operator =(const UniqueHandle &) = delete;
+  UniqueHandle &
+  operator =(const UniqueHandle &) = delete;
 
-  UniqueHandle &operator =(UniqueHandle &&right) noexcept
+  UniqueHandle &
+  operator =(UniqueHandle &&right) noexcept
   {
     if (&right != this)
     {
@@ -53,27 +55,32 @@ public:
     return (TraitsType::Invalid() != m_handle);
   }
 
-  bool operator ==(const UniqueHandle &right) const noexcept(true)
+  bool
+  operator ==(const UniqueHandle &right) const noexcept(true)
   {
     return (right.m_handle == m_handle);
   }
 
-  bool operator !=(const UniqueHandle &right) const noexcept(true)
+  bool
+  operator !=(const UniqueHandle &right) const noexcept(true)
   {
     return (right.m_handle != m_handle);
   }
 
-  HandleType Get(void) const noexcept(true)
+  HandleType
+  Get(void) const noexcept(true)
   {
     return m_handle;
   }
 
-  void Reset(void) noexcept(true)
+  void
+  Reset(void) noexcept(true)
   {
     Close();
   }
 
-  bool Reset(const HandleType handle) noexcept(true)
+  bool
+  Reset(const HandleType handle) noexcept(true)
   {
     if (handle != m_handle)
     {
@@ -83,7 +90,8 @@ public:
     return (bool)*this;
   }
 
-  HandleType Release(void) noexcept(true)
+  HandleType
+  Release(void) noexcept(true)
   {
     HandleType handle = m_handle;
     m_handle = TraitsType::Invalid();
@@ -91,7 +99,8 @@ public:
   }
 
 private:
-  void Close(void) noexcept(true)
+  void
+  Close(void) noexcept(true)
   {
     if (*this)
     {
@@ -111,7 +120,8 @@ class UniqueHandleTraits
 public:
   typedef T Type;
 
-  static Type Invalid(void) noexcept(true)
+  static Type
+  Invalid(void) noexcept(true)
   {
     return nullptr;
   }

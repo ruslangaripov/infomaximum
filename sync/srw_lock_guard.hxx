@@ -37,7 +37,8 @@ public:
     }
   }
 
-  SrwLockGuardExclusive &operator =(const SrwLockGuardExclusive &) = delete;
+  SrwLockGuardExclusive &
+  operator =(const SrwLockGuardExclusive &) = delete;
 
   explicit operator bool(void) const noexcept(true)
   {
@@ -83,7 +84,8 @@ public:
     }
   }
 
-  SrwLockGuardShared &operator =(const SrwLockGuardShared&) = delete;
+  SrwLockGuardShared &
+  operator =(const SrwLockGuardShared&) = delete;
 
   explicit operator bool(void) const noexcept(true)
   {

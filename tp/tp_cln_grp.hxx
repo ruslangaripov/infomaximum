@@ -7,7 +7,8 @@
 class TpClnGrpTraits: public UniqueHandleTraits<TP_CLEANUP_GROUP *>
 {
 public:
-  static void Close(Type handle) noexcept(true)
+  static void
+  Close(Type handle) noexcept(true)
   {
     CloseThreadpoolCleanupGroup(handle);
   }

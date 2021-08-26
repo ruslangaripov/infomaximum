@@ -7,7 +7,8 @@
 class TpEnvTraits: public UniqueHandleTraits<TP_CALLBACK_ENVIRON *>
 {
 public:
-  static void Close(Type handle) noexcept(true)
+  static void
+  Close(Type handle) noexcept(true)
   {
     DestroyThreadpoolEnvironment(handle);
   }

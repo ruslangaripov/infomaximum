@@ -17,7 +17,8 @@ public:
   {
   }
   /* Schedules execution of this work on the thread pool. */
-  void Submit()
+  void
+  Submit()
   {
     SubmitThreadpoolWork(m_wrk);
   }
@@ -27,23 +28,27 @@ public:
    * called on x86 architecture with an Intel CPU, which guarantees atomic
    * writing of a quadword aligned on a 64-bit boundary, and VC++ aligns
    * quadwords on a 64-boundary by default. */
-  void SetShutdownEvt(void *shutdown) noexcept(true)
+  void
+  SetShutdownEvt(void *shutdown) noexcept(true)
   {
     m_shutdown = shutdown;
   }
 
-  TP_WORK *Get(void) const noexcept(true)
+  TP_WORK *
+  Get(void) const noexcept(true)
   {
     return m_wrk;
   }
 
 protected:
-  void Create(PTP_WORK_CALLBACK clbk, TP_CALLBACK_ENVIRON *env)
+  void
+  Create(PTP_WORK_CALLBACK clbk, TP_CALLBACK_ENVIRON *env)
   {
     m_wrk = CreateThreadpoolWork(clbk, this, env);
   }
 
-  void *GetShutdownEvt() const noexcept(true)
+  void *
+  GetShutdownEvt() const noexcept(true)
   {
     return m_shutdown;
   }

@@ -9,12 +9,14 @@
 class WrkThrd: public TpWrk
 {
 public:
-  void Create(TP_CALLBACK_ENVIRON *tp_env)
+  void
+  Create(TP_CALLBACK_ENVIRON *tp_env)
   {
     BaseClass::Create(Callback, tp_env);
   }
 
-  void SetThrdData(struct Data *data)
+  void
+  SetThrdData(struct Data *data)
   {
     m_data = data;
   }

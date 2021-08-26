@@ -7,7 +7,8 @@
 class TpTraits: public UniqueHandleTraits<TP_POOL *>
 {
 public:
-  static void Close(Type handle) noexcept(true)
+  static void
+  Close(Type handle) noexcept(true)
   {
     CloseThreadpool(handle);
   }

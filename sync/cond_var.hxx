@@ -16,11 +16,13 @@ public:
   /* Gets raw pointer to the underlying condition variable object.  And just
    * like with SRW locks -- do not modify the result.  Only use the condition
    * variable functions to manage condition variables. */
-  const CONDITION_VARIABLE *Get(void) const noexcept(true)
+  const CONDITION_VARIABLE *
+  Get(void) const noexcept(true)
   {
     return &m_cond_var;
   }
-  CONDITION_VARIABLE *Get(void) noexcept(true)
+  CONDITION_VARIABLE *
+  Get(void) noexcept(true)
   {
     return &m_cond_var;
   }
@@ -33,13 +35,14 @@ public:
    * this member tests the state of this condition variable and returns
    * immediately. If `timeout` is `INFINITE` this function's time-out interval
    * never elapses. On success this member returns a non-zero value. */
-  int Wait(SRWLOCK *srw_lock, unsigned long int timeout,
-      unsigned long int flags)
+  int
+  Wait(SRWLOCK *srw_lock, unsigned long int timeout, unsigned long int flags)
   {
     return SleepConditionVariableSRW(&m_cond_var, srw_lock, timeout, flags);
   }
   /* Wakes a single thread waiting on this condition variable. */
-  void NotifyOne(void)
+  void
+  NotifyOne(void)
   {
     WakeConditionVariable(&m_cond_var);
   }
