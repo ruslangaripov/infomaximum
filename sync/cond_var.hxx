@@ -10,8 +10,8 @@ public:
   {
     InitializeConditionVariable(&m_cond_var);
   }
-  CondVar(const ConditionVariable &) = delete;
-  CondVar &operator =(const ConditionVariable &) = delete;
+  CondVar(const CondVar &) = delete;
+  CondVar &operator =(const CondVar &) = delete;
 
   /* Gets raw pointer to the underlying condition variable object.  And just
    * like with SRW locks -- do not modify the result.  Only use the condition
@@ -41,7 +41,7 @@ public:
   /* Wakes a single thread waiting on this condition variable. */
   void NotifyOne(void)
   {
-    WakeConditionVariable(&m_condition_variable);
+    WakeConditionVariable(&m_cond_var);
   }
 
 private:
