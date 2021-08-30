@@ -7,7 +7,7 @@ class TpWrk
 {
 public:
   TpWrk(void)
-      : m_wrk{nullptr}, m_shutdown{nullptr}
+      : m_wrk{nullptr}
   {
   }
   /* Schedules execution of this work on the thread pool. */
@@ -32,7 +32,6 @@ protected:
 
 private:
   TP_WORK *m_wrk;
-  void *m_shutdown;
 };
 
 #endif /* not TP_TP_WRK_HXX_ */
