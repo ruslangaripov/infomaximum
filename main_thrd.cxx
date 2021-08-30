@@ -33,7 +33,7 @@ MainThrd::DispatchRequests(void)
   std::printf("[%ld] Main thread started.\n%d worker thread(s) will be "
       "created.  Waiting while worker threads are being created.\n", thrd_id,
       kNumberOfThreads);
-  m_data->kill = CreateEventW(nullptr, TRUE, FALSE, NULL);
+  m_data->kill = CreateEventW(nullptr, TRUE, FALSE, nullptr);
   m_data->wrk_thrds_run = 0;
   wrk_thrd.SetThrdData(m_data);
   wrk_thrd.Create(m_data->tp_env);

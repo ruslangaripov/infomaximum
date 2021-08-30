@@ -25,7 +25,7 @@ main(void)
           nullptr);
     }
     data.tp_env = tp_env.Get();
-    data.end_program = CreateEventW(nullptr, TRUE, FALSE, NULL);
+    data.end_program = CreateEventW(nullptr, TRUE, FALSE, nullptr);
     main_thrd.SetThrdData(&data);
     main_thrd.Create(tp_env.Get());
     main_thrd.Submit();
