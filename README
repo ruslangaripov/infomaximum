@@ -1,2 +1,6 @@
 This directory contains code I created solving the test task for ``C++
 developer'' position in Infomaximum.
+
+This branch contains C++ code with Microsoft Windows API calls.  The
+solution is based on Microsoft Windows thread pool API.  To generate
+random numbers we use C++ stdlib here.
