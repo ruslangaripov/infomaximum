@@ -65,8 +65,6 @@ GetRequest(void) noexcept(true)
 void
 ProcessRequest(const Request *request) noexcept(true)
 {
-  (void)request;
-
   const unsigned long int thrd_id = GetCurrentThreadId();
 
   std::random_device rd;
