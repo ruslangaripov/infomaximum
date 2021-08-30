@@ -62,3 +62,17 @@ InitReqQueue(struct ReqQueueData **head, struct ReqQueueData **tail)
   *head = NULL;
   *tail = NULL;
 }
+
+size_t
+SzOfReqQueue(struct ReqQueueData *head)
+{
+  size_t result;
+
+  result = 0;
+  while (NULL != head)
+  {
+    ++result;
+    head = head->next;
+  }
+  return result;
+}
