@@ -9,15 +9,17 @@
 
 static size_t id_counter;
 
-static void ProcessRequests(struct ThrdData *thrd_data, size_t id);
-
-void
-ProcessRequests(struct ThrdData *thrd_data, size_t id)
+unsigned int
+WrkThrd(void *arg)
 {
   const unsigned long int thrd_id = GetCurrentThreadId();
 
   struct Request *req;
+  struct ThrdData *thrd_data;
+  size_t id;
 
+  id = id_counter++;
+  thrd_data = (struct ThrdData *)arg;
   AcquireSRWLockExclusive(&thrd_data->mtx);
   ++thrd_data->wrk_thrds_run;
   ReleaseSRWLockExclusive(&thrd_data->mtx);
@@ -47,21 +49,6 @@ ProcessRequests(struct ThrdData *thrd_data, size_t id)
     }
   }
 
-  AcquireSRWLockExclusive(&thrd_data->mtx);
-  --thrd_data->wrk_thrds_run;
-  ReleaseSRWLockExclusive(&thrd_data->mtx);
   printf("[%ld] Worker thread #%zu exited.\n", thrd_id, id);
-  WakeConditionVariable(&thrd_data->wrk_thrds_killed);
-}
-
-void
-WrkThrdCallback(TP_CALLBACK_INSTANCE *inst, void *ctx, TP_WORK *wrk)
-{
-  (void)wrk;
-
-  CallbackMayRunLong(inst);
-  if (NULL != ctx)
-  {
-    ProcessRequests((struct ThrdData *)ctx, id_counter++);
-  }
+  return 0;
 }

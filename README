@@ -1,2 +1,6 @@
 This directory contains code I created solving the test task for ``C++
 developer'' position in Infomaximum.
+
+This branch contains pure C code with Microsoft Windows API calls.  The
+solution is based on Microsoft Windows' "plain" threads (created via
+_beginthreadex()).  To generate random numbers we use CNG here.

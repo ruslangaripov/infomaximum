@@ -1,34 +1,39 @@
 #include "main_thrd.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <process.h>
 #include <synchapi.h>
 #include <windows.h>
 #include "if.h"
 #include "thrd_data.h"
 #include "wrk_thrd.h"
 
-static void DispatchRequests(struct ThrdData *thrd_data);
-
-void
-DispatchRequests(struct ThrdData *thrd_data)
+unsigned int
+MainThrd(void *arg)
 {
   const unsigned long int thrd_id = GetCurrentThreadId();
 
+  void *wrk_thrd;
+  struct ThrdData *thrd_data;
   struct Request *req;
-  TP_WORK *wrk_thrd;
   int i;
+  unsigned int result;
 
   printf("[%ld] Main thread started.\n%d worker thread(s) will be created.  "
       "Waiting while worker threads are being created.\n", thrd_id,
       kNumberOfThreads);
-  thrd_data->kill = CreateEventW(NULL, TRUE, FALSE, NULL);
-  thrd_data->wrk_thrds_run = 0;
-  wrk_thrd = CreateThreadpoolWork(WrkThrdCallback, thrd_data,
-      thrd_data->tp_clbk_env);
+  wrk_thrd = malloc(kNumberOfThreads * sizeof wrk_thrd);
   if (NULL != wrk_thrd)
   {
+    memset(wrk_thrd, 0, kNumberOfThreads * sizeof wrk_thrd);
+    thrd_data = (struct ThrdData *)arg;
+    thrd_data->kill = CreateEventW(NULL, TRUE, FALSE, NULL);
+    thrd_data->wrk_thrds_run = 0;
     for (i = 0; kNumberOfThreads > i; ++i)
     {
-      SubmitThreadpoolWork(wrk_thrd);
+      *((void **)wrk_thrd + i) = (void *)_beginthreadex(NULL, 0, WrkThrd,
+          thrd_data, 0, NULL);
     }
     AcquireSRWLockExclusive(&thrd_data->mtx);
     while (kNumberOfThreads != thrd_data->wrk_thrds_run)
@@ -50,13 +55,11 @@ DispatchRequests(struct ThrdData *thrd_data)
 
     SetEvent(thrd_data->kill);
     WakeAllConditionVariable(&thrd_data->reqs_is_ne);
-    AcquireSRWLockExclusive(&thrd_data->mtx);
-    while (0 != thrd_data->wrk_thrds_run)
+    WaitForMultipleObjects(kNumberOfThreads, wrk_thrd, TRUE, INFINITE);
+    for (i = 0; kNumberOfThreads > i; ++i)
     {
-      SleepConditionVariableSRW(&thrd_data->wrk_thrds_killed, &thrd_data->mtx,
-          INFINITE, 0);
+      CloseHandle(*((void **)wrk_thrd + i));
     }
-    ReleaseSRWLockExclusive(&thrd_data->mtx);
     if (NULL != thrd_data->req_queue_head)
     {
       printf("%zu unprocessed request(s) remain in the queue.  Remove them.\n",
@@ -64,19 +67,14 @@ DispatchRequests(struct ThrdData *thrd_data)
     }
     ClearReqQueue(&thrd_data->req_queue_head, &thrd_data->req_queue_tail);
     FiniRequests();
+    CloseHandle(thrd_data->kill);
+    free(wrk_thrd);
+    result = 0;
+  }
+  else
+  {
+    result = 1;
   }
   printf("[%ld] Main thread exited.\n", thrd_id);
-  SetEvent(thrd_data->end_program);
-}
-
-void
-MainThrdCallback(TP_CALLBACK_INSTANCE *inst, void *ctx, TP_WORK *wrk)
-{
-  (void)wrk;
-
-  CallbackMayRunLong(inst);
-  if (NULL != ctx)
-  {
-    DispatchRequests((struct ThrdData *)ctx);
-  }
+  return result;
 }
