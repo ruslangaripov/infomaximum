@@ -30,6 +30,7 @@ main(void)
     main_thrd.Create(tp_env.Get());
     main_thrd.Submit();
     WaitForSingleObject(data.end_program, INFINITE);
+    CloseHandle(data.end_program);
     CloseThreadpoolCleanupGroupMembers(tp_cln_grp.Get(), TRUE, nullptr);
   }
   return 0;

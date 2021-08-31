@@ -78,6 +78,7 @@ MainThrd::DispatchRequests(void)
       delete *req_it;
     }
   }
+  CloseHandle(m_data->kill);
   std::printf("[%ld] Main thread exited.\n", thrd_id);
   SetEvent(m_data->end_program);
 }
