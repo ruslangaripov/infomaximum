@@ -116,7 +116,7 @@ ProcessRequest(const struct Request *request)
 
   int sleep;
 
-  sleep = 0;
+  sleep = GetRandomDelay(100, 1000);
   if (NULL != request)
   {
     printf("[%ld] Worker thread imitates processing of request #%d for %d "
