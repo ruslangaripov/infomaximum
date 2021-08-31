@@ -65,6 +65,7 @@ DispatchRequests(struct ThrdData *thrd_data)
     ClearReqQueue(&thrd_data->req_queue_head, &thrd_data->req_queue_tail);
     FiniRequests();
   }
+  CloseHandle(thrd_data->kill);
   printf("[%ld] Main thread exited.\n", thrd_id);
   SetEvent(thrd_data->end_program);
 }

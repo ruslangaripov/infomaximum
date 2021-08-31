@@ -46,6 +46,7 @@ main(void)
           SubmitThreadpoolWork(main_thrd);
           WaitForSingleObject(thrd_data.end_program, INFINITE);
         }
+        CloseHandle(thrd_data.end_program);
         CloseThreadpoolCleanupGroupMembers(tp_cln_grp, TRUE, NULL);
         CloseThreadpoolCleanupGroup(tp_cln_grp);
       }
